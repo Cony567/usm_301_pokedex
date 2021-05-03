@@ -1,5 +1,6 @@
 
 
+
 tinymce.init({
     selector: '#descripcion-txt',
     height: 200,
@@ -20,7 +21,9 @@ tinymce.init({
 //Fuego: <i class="fas fa-fire"></i>
 //Planta: <i class="fas fa-leaf"></i>
 //Normal: <i class="fas fa-star"></i>
+const eliminarPok = ()=>{
 
+}
 const pokemones = [];
 const cargarTabla = ()=>{
   //1. obtener una referencia a la tabla
@@ -57,6 +60,7 @@ const cargarTabla = ()=>{
     
     let td_acciones=document.createElement("td");
     let boton=document.createElement("button");
+    boton.classList.add("btn-danger");
     boton.innerText = "Eliminar";
     td_acciones.appendChild(boton);
     //5. agregar las celdas al tr
@@ -66,10 +70,18 @@ const cargarTabla = ()=>{
     tr.appendChild(td_description);
     tr.appendChild(td_acciones);
     //6. agregar el tr a la tabla 
-    tbody.appendChild(tr)
+    tr.classList.add("text-center");
+    tbody.appendChild(tr);
   }
   
 }
+document.querySelector("#limpiar-btn").addEventListener("click", ()=>{
+  let tbody = document.querySelector("#tabla-tbody");
+  tbody.innerHTML="";
+  for(let i=pokemones.length;i>=0;--i){
+    pokemones.pop();
+  }
+});
 document.querySelector("#registrar-btn").addEventListener("click", ()=>{
     let nombre = document.querySelector("#nombre-txt").value;
     let description = tinymce.get("descripcion-txt").getContent();
