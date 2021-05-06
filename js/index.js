@@ -21,8 +21,20 @@ tinymce.init({
 //Fuego: <i class="fas fa-fire"></i>
 //Planta: <i class="fas fa-leaf"></i>
 //Normal: <i class="fas fa-star"></i>
-const eliminarPok = ()=>{
-
+const eliminarPokemon = async function(){
+  let res = await Swal.fire({
+    title: `desea eliminar el pokemon ${pokemones[this.numero].nombre}?`,
+    showCancelButton:true,
+    confirmButtonText:'Si'
+  })
+  if (res.isConfirmed){
+    pokemones.splice(this.numero,1);
+    cargarTabla();
+    Swal.fire("Pokemon enviado al profesor oak");
+    
+  } else{
+    Swal.fire("Operacion cancelada");
+  }
 }
 const pokemones = [];
 const cargarTabla = ()=>{
@@ -42,6 +54,9 @@ const cargarTabla = ()=>{
     let td_description=document.createElement("td");
     td_description.innerHTML= p.description;
     let td_tipo=document.createElement("td");
+    if (p.legendario){
+      td_nombre.classList.add("text-warning")
+    }
 
     let icono = document.createElement("i");
     if(p.tipo=="fuego"){
@@ -60,8 +75,10 @@ const cargarTabla = ()=>{
     
     let td_acciones=document.createElement("td");
     let boton=document.createElement("button");
-    boton.classList.add("btn-danger");
+    boton.classList.add("btn","btn-danger");
     boton.innerText = "Eliminar";
+    boton.numero = i;
+    boton.addEventListener("click", eliminarPokemon);
     td_acciones.appendChild(boton);
     //5. agregar las celdas al tr
     tr.appendChild(td_nro);//agregar un elemento dentro de otro xd 
@@ -76,12 +93,19 @@ const cargarTabla = ()=>{
   
 }
 document.querySelector("#limpiar-btn").addEventListener("click", ()=>{
-  let tbody = document.querySelector("#tabla-tbody");
-  tbody.innerHTML="";
-  for(let i=pokemones.length;i>=0;--i){
-    pokemones.pop();
-  }
+  //let tbody = document.querySelector("#tabla-tbody");
+  //tbody.innerHTML="";
+  //for(let i=pokemones.length;i>=0;--i){
+  //  pokemones.pop();
+  //}
+  document.querySelector("#nombre-txt").value = "";
+  tinymce.get("descripcion-txt").setContent("");
+  document.querySelector("#legendario-no").checked = true;
+  document.querySelector("#tipo-select").value = "planta";
+
+
 });
+
 document.querySelector("#registrar-btn").addEventListener("click", ()=>{
     let nombre = document.querySelector("#nombre-txt").value;
     let description = tinymce.get("descripcion-txt").getContent();
@@ -98,3 +122,5 @@ document.querySelector("#registrar-btn").addEventListener("click", ()=>{
     //mensaje por pantalla pero bonito xd
     Swal.fire("Exito!", "Pokemon registrado","success");
 });
+
+
